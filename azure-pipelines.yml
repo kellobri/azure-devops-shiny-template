@@ -20,7 +20,10 @@ steps:
   inputs:
     filePath: 'create-upload-deploy.sh'
     arguments: 'NHS - R CONTENT'
-
+  env:
+    CONNECT_API_KEY: $(CONNECT_API_KEY)
 - task: Bash@3
   inputs:
     filePath: 'set-vanity-url.sh'
+  env:
+    CONNECT_API_KEY: $(CONNECT_API_KEY)
