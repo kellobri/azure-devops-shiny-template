@@ -10,6 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+- group: 'RStudio Connect Vars'
 - name: CONTENT_DIRECTORY
   value: app-dir
 - name: VANITY_NAME
