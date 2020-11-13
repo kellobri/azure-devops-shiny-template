@@ -77,6 +77,8 @@ RESULT=$(curl --silent --show-error -L --max-redirs 0 --fail -X POST \
 CONTENT=$(echo "$RESULT" | jq -r .guid)
 echo "Created content: ${CONTENT}"
 
+echo "##vso[task.setvariable variable=CONTENT]${CONTENT}"
+
 # Upload the bundle
 UPLOAD=$(curl --silent --show-error -L --max-redirs 0 --fail -X POST \
               -H "Authorization: Key ${CONNECT_API_KEY}" \
@@ -120,21 +122,3 @@ if [ "${CODE}" -ne 0 ]; then
     exit 1
 fi
 echo "Task: ${TASK} Complete."
-
-# Build the JSON to create a vanity force update request
-DATA=$(jq --arg path "${VANITY_NAME}" \
-   --argjson force true \
-   '. | .["path"]=$path | .["force"]=$force' \
-   <<<'{}')
-   
-echo "Trying: ${CONNECT_SERVER}__api__/v1/content/${CONTENT}/vanity"
-
-echo "${DATA}"
-
-RESULT=$(curl --silent --show-error -L --max-redirs 0 --fail -X PUT \
-    -H "Authorization: Key ${CONNECT_API_KEY}" \
-    --data-binary "${DATA}" \
-    "${CONNECT_SERVER}__api__/v1/content/${CONTENT}/vanity")
-RESPONSE=$(echo "$RESULT" | jq -r .path)
-
-echo "Vanity URL: ${RESPONSE} Update Complete."
