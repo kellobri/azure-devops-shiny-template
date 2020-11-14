@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- master
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -18,13 +18,21 @@ variables:
 
 steps:
 - task: Bash@3
+  displayName: 'Create Upload Deploy'
   inputs:
     filePath: 'create-upload-deploy.sh'
     arguments: 'NHS - R CONTENT'
   env:
     CONNECT_API_KEY: $(CONNECT_API_KEY)
 - task: Bash@3
+  displayName: 'Set Vanity URL'
   inputs:
     filePath: 'set-vanity-url.sh'
+  env:
+    CONNECT_API_KEY: $(CONNECT_API_KEY)
+- task: Bash@3
+  displayName: 'Update Access Control List'
+  inputs:
+    filePath: 'update-acl.sh'
   env:
     CONNECT_API_KEY: $(CONNECT_API_KEY)
