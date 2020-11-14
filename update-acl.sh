@@ -6,10 +6,8 @@
 
 # Build the JSON request data for adding a Viewer Group to the content ACL
 DATA=$(jq --arg principal_guid "${GROUP_GUID}" \
-   --arg principal_type group \
-   --arg role viewer \
-   '. | .["principal_guid"]=$principal_guid | .["principal_type"]=$principal_type' | .["role"]=$role' \
-   <<<'{}')
+   '. | .["principal_guid"]=$principal_guid' \
+   <<<'{"principal_type":"group","role":"viewer"}')
 
 echo "${DATA}"
 
