@@ -1,7 +1,7 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# RStudio Connect Deployment Pipeline:
+#   1. Create, Upload, & Deploy Content
+#   2. Set the Vanity URL
+#   3. Update the Access Control List
 
 trigger:
 - master
