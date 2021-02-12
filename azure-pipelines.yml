@@ -4,7 +4,7 @@
 #   3. Update the Access Control List
 
 trigger:
-- master
+- main
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -21,7 +21,7 @@ steps:
   displayName: 'Create Upload Deploy'
   inputs:
     filePath: 'create-upload-deploy.sh'
-    arguments: 'NHS - R CONTENT'
+    arguments: 'Azure DevOps Deployment Demo App'
   env:
     CONNECT_API_KEY: $(CONNECT_API_KEY)
 - task: Bash@3
