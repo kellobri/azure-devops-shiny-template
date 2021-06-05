@@ -38,10 +38,10 @@ if [ -z "${CONNECT_API_KEY}" ] ; then
     exit 1
 fi
 
-if [ $# -eq 0 ] ; then
-    echo "usage: $0 <content-title>"
-    exit 1
-fi
+#if [ $# -eq 0 ] ; then
+#    echo "usage: $0 <content-title>"
+#    exit 1
+#fi
 
 OWNER_REQUEST=$(curl --silent --show-error -L --max-redirs 0 --fail -X GET \
     -H "Authorization: Key ${CONNECT_API_KEY}" \
