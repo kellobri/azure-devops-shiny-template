@@ -13,7 +13,7 @@ library(shiny)
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data - Azure DevOps Demo"),
+    titlePanel("Old Faithful - Azure DevOps Demo"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
