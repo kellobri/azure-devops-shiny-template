@@ -63,7 +63,7 @@ rm -f "${BUNDLE_PATH}"
 echo "Creating bundle archive: ${BUNDLE_PATH}"
 tar czf "${BUNDLE_PATH}" -C "${CONTENT_DIRECTORY}" .
 
-if [ ${CONTENT_CHECK[@]} -eq 0 ] ; then
+if [ -z "${CONTENT_CHECK[@]}" ] ; then
     # Only "name" is required by the RStudio Connect API but we use "title" for
     # better presentation. We build a random name to avoid colliding with existing
     # content.
