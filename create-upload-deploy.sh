@@ -63,7 +63,9 @@ rm -f "${BUNDLE_PATH}"
 echo "Creating bundle archive: ${BUNDLE_PATH}"
 tar czf "${BUNDLE_PATH}" -C "${CONTENT_DIRECTORY}" .
 
-if [ -z "${CONTENT_CHECK[@]}" ] ; then
+if [[ "${CONTENT_CHECK[@]}" ]] ; then
+    CONTENT=$(echo "${CONTENT_CHECK[0]}" | jq -r .guid)
+else
     # Only "name" is required by the RStudio Connect API but we use "title" for
     # better presentation. We build a random name to avoid colliding with existing
     # content.
@@ -82,8 +84,6 @@ if [ -z "${CONTENT_CHECK[@]}" ] ; then
                 "${CONNECT_SERVER}__api__/v1/content")
     CONTENT=$(echo "$RESULT" | jq -r .guid)
     echo "Created content: ${CONTENT}"
-else
-    CONTENT=$(echo "${CONTENT_CHECK[0]}" | jq -r .guid)
 fi
 
 echo "##vso[task.setvariable variable=CONTENT]${CONTENT}"
