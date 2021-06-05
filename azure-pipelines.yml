@@ -16,7 +16,7 @@ variables:
 - name: VANITY_NAME
   value: azure-devops-app
 - name: APP_NAME
-  value: unique-app-name
+  value: unique-app-name-1
 
 steps:
 - task: Bash@3
