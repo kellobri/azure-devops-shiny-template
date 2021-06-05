@@ -51,8 +51,10 @@ echo "Owner GUID: ${OWNER_GUID}"
 
 CONTENT_CHECK=$(curl --silent --show-error -L --max-redirs 0 --fail -X GET \
     -H "Authorization: Key ${CONNECT_API_KEY}" \
-    "${CONNECT_SERVER}__api__/v1/content?name=${APP_NAME}&owner_guid=${OWNER_GUID}")[0]
-CONTENT=$(echo "$CONTENT_CHECK" | jq -r .guid)
+    "${CONNECT_SERVER}__api__/v1/content?name=${APP_NAME}&owner_guid=${OWNER_GUID}")
+echo "${CONTENT_CHECK[0]}"
+CHECK=$(echo ${CONTENT_CHECK[0]})
+CONTENT=$(echo "$CHECK" | jq -r .guid)
 
 
 BUNDLE_PATH="bundle.tar.gz"
