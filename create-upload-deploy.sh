@@ -52,10 +52,7 @@ echo "Owner GUID: ${OWNER_GUID}"
 CONTENT_CHECK=$(curl --silent --show-error -L --max-redirs 0 --fail -X GET \
     -H "Authorization: Key ${CONNECT_API_KEY}" \
     "${CONNECT_SERVER}__api__/v1/content?name=${APP_NAME}&owner_guid=${OWNER_GUID}")
-echo "${CONTENT_CHECK[0]}"
-CHECK=$(echo ${CONTENT_CHECK[0]})
-CONTENT=$(echo "$CHECK" | jq -r .guid)
-
+echo "Existing content lookup result: ${CONTENT_CHECK[0]}"
 
 BUNDLE_PATH="bundle.tar.gz"
 
@@ -66,7 +63,7 @@ rm -f "${BUNDLE_PATH}"
 echo "Creating bundle archive: ${BUNDLE_PATH}"
 tar czf "${BUNDLE_PATH}" -C "${CONTENT_DIRECTORY}" .
 
-if [ -z "${CONTENT}" ] ; then
+if [ ${CONTENT_CHECK[@]} -eq 0 ] ; then
     # Only "name" is required by the RStudio Connect API but we use "title" for
     # better presentation. We build a random name to avoid colliding with existing
     # content.
@@ -85,6 +82,8 @@ if [ -z "${CONTENT}" ] ; then
                 "${CONNECT_SERVER}__api__/v1/content")
     CONTENT=$(echo "$RESULT" | jq -r .guid)
     echo "Created content: ${CONTENT}"
+else
+    CONTENT=$(echo "${CONTENT_CHECK[0]}" | jq -r .guid)
 fi
 
 echo "##vso[task.setvariable variable=CONTENT]${CONTENT}"
