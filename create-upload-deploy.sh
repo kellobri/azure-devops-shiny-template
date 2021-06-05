@@ -63,7 +63,8 @@ rm -f "${BUNDLE_PATH}"
 echo "Creating bundle archive: ${BUNDLE_PATH}"
 tar czf "${BUNDLE_PATH}" -C "${CONTENT_DIRECTORY}" .
 
-if [[ "${CONTENT_CHECK[@]}" ]] ; then
+if [ "${CONTENT_CHECK[@]}" -ne 0 ] ; then
+    echo "Non-Empty Array"
     CONTENT=$(echo "${CONTENT_CHECK[0]}" | jq -r .guid)
 else
     # Only "name" is required by the RStudio Connect API but we use "title" for
