@@ -43,6 +43,18 @@ if [ $# -eq 0 ] ; then
     exit 1
 fi
 
+OWNER_REQUEST=$(curl --silent --show-error -L --max-redirs 0 --fail -X GET \
+    -H "Authorization: Key ${CONNECT_API_KEY}" \
+    "${CONNECT_SERVER}__api__/v1/user")
+OWNER_GUID=$(echo "$OWNER_REQUEST" | jq -r .guid)
+echo "Owner GUID: ${OWNER_GUID}"
+
+CONTENT_CHECK=$(curl --silent --show-error -L --max-redirs 0 --fail -X GET \
+    -H "Authorization: Key ${CONNECT_API_KEY}" \
+    "${CONNECT_SERVER}__api__/v1/content?name=${APP_NAME}&owner_guid=${OWNER_GUID}")
+CONTENT=$(echo "$CONTENT_CHECK" | jq -r .guid)
+
+
 BUNDLE_PATH="bundle.tar.gz"
 
 # Remove any bundle from previous attempts.
@@ -52,30 +64,26 @@ rm -f "${BUNDLE_PATH}"
 echo "Creating bundle archive: ${BUNDLE_PATH}"
 tar czf "${BUNDLE_PATH}" -C "${CONTENT_DIRECTORY}" .
 
-# Only "name" is required by the RStudio Connect API but we use "title" for
-# better presentation. We build a random name to avoid colliding with existing
-# content.
-NOW=$(date "+%Y-%m-%d %H:%M:%S")
-BASE_TITLE="$@"
-TITLE="${BASE_TITLE} - ${NOW}"
+if [ -z "${CONTENT}" ] ; then
+    # Only "name" is required by the RStudio Connect API but we use "title" for
+    # better presentation. We build a random name to avoid colliding with existing
+    # content.
+    NOW=$(date "+%Y-%m-%d %H:%M:%S")
+    BASE_TITLE="$@"
+    TITLE="${BASE_TITLE} - ${NOW}"
 
-# Assign a random name. Avoid collisions so we always create something.
-# Inspired by http://tldp.org/LDP/abs/html/randomvar.html
-letters=(a b c d e f g h i j k l m n o p q r s t u v w x y z)
-num_letters=${#letters[*]}
-NAME=$(for((i=1;i<=13;i++)); do printf '%s' "${letters[$((RANDOM%num_letters))]}"; done)
-
-# Build the JSON to create content.
-DATA=$(jq --arg title "${TITLE}" \
-   --arg name  "${NAME}" \
-   '. | .["title"]=$title | .["name"]=$name' \
-   <<<'{}')
-RESULT=$(curl --silent --show-error -L --max-redirs 0 --fail -X POST \
-              -H "Authorization: Key ${CONNECT_API_KEY}" \
-              --data "${DATA}" \
-              "${CONNECT_SERVER}__api__/v1/content")
-CONTENT=$(echo "$RESULT" | jq -r .guid)
-echo "Created content: ${CONTENT}"
+    # Build the JSON to create content.
+    DATA=$(jq --arg title "${TITLE}" \
+    --arg name  "${APP_NAME}" \
+    '. | .["title"]=$title | .["name"]=$name' \
+    <<<'{}')
+    RESULT=$(curl --silent --show-error -L --max-redirs 0 --fail -X POST \
+                -H "Authorization: Key ${CONNECT_API_KEY}" \
+                --data "${DATA}" \
+                "${CONNECT_SERVER}__api__/v1/content")
+    CONTENT=$(echo "$RESULT" | jq -r .guid)
+    echo "Created content: ${CONTENT}"
+fi
 
 echo "##vso[task.setvariable variable=CONTENT]${CONTENT}"
 
