@@ -16,14 +16,13 @@ variables:
 - name: VANITY_NAME
   value: azure-devops-app
 - name: APP_NAME
-  value: unique-app-name-1
+  value: unique-app-name-test
 
 steps:
 - task: Bash@3
   displayName: 'Create Upload Deploy'
   inputs:
     filePath: 'create-upload-deploy.sh'
-    arguments: 'Azure DevOps Deployment Demo App'
   env:
     CONNECT_API_KEY: $(CONNECT_API_KEY)
 - task: Bash@3

@@ -70,17 +70,15 @@ if [[ "${CONTENT_CHECK}" == *"guid"* ]] ; then
     CONTENT=$(echo "${STR_CHECK}" | jq -r .guid)
 else
     # Only "name" is required by the RStudio Connect API but we use "title" for
-    # better presentation. We build a random name to avoid colliding with existing
-    # content.
+    # better presentation. 
     echo "Creating a new content item ..."
-    NOW=$(date "+%Y-%m-%d %H:%M:%S")
-    BASE_TITLE="$@"
-    TITLE="${BASE_TITLE} - ${NOW}"
+    #NOW=$(date "+%Y-%m-%d %H:%M:%S")
+    #BASE_TITLE="$@"
+    #TITLE="${BASE_TITLE} - ${NOW}"
 
     # Build the JSON to create content.
-    DATA=$(jq --arg title "${TITLE}" \
-    --arg name  "${APP_NAME}" \
-    '. | .["title"]=$title | .["name"]=$name' \
+    DATA=$(jq --arg name  "${APP_NAME}" \
+    '. | .["name"]=$name' \
     <<<'{}')
     RESULT=$(curl --silent --show-error -L --max-redirs 0 --fail -X POST \
                 -H "Authorization: Key ${CONNECT_API_KEY}" \
