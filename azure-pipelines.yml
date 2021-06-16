@@ -23,17 +23,11 @@ steps:
   displayName: 'Create Upload Deploy'
   inputs:
     filePath: 'create-upload-deploy.sh'
-  env:
-    CONNECT_API_KEY: $(CONNECT_API_KEY)
 - task: Bash@3
   displayName: 'Set Vanity URL'
   inputs:
     filePath: 'set-vanity-url.sh'
-  env:
-    CONNECT_API_KEY: $(CONNECT_API_KEY)
 - task: Bash@3
   displayName: 'Update Access Control List'
   inputs:
     filePath: 'update-acl.sh'
-  env:
-    CONNECT_API_KEY: $(CONNECT_API_KEY)
